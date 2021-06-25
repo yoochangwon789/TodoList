@@ -22,15 +22,28 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        data.add(Todo("숙제", false))
-        data.add(Todo("청소", false))
+        data.add(Todo("숙제"))
+        data.add(Todo("청소"))
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = TodoAdapter(data)
+
+        binding.addButton.setOnClickListener {
+            addTodo()
+        }
+    }
+
+    // 할 일을 추가하는 메서드
+    private fun addTodo() {
+        val todo = Todo(binding.editText.text.toString())
+        data.add(todo)
+        // 데이터가 바뀌었을 때 RecyclerView adapter 에게 알려줘야 한다 notifyDataSetChanged 을 사용
+        // non-null
+        binding.recyclerView.adapter?.notifyDataSetChanged()
     }
 }
 
-data class Todo(val text: String, var isDone: Boolean)
+data class Todo(val text: String, var isDone: Boolean = false)
 
 class TodoAdapter(private val dataSet: List<Todo>) :
     RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
