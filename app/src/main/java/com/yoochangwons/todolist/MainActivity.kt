@@ -1,5 +1,7 @@
 package com.yoochangwons.todolist
 
+import android.graphics.Paint
+import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,18 +25,29 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         data.add(Todo("숙제"))
-        data.add(Todo("청소"))
+        data.add(Todo("청소", true))
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = TodoAdapter(data,
-            onClickDeleteIcon = {
-                deleteTodo(it)
-            }
-        )
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = TodoAdapter(
+                data,
+                onClickDeleteIcon = {
+                    deleteTodo(it)
+                },
+                onClickItem = {
+                    toggleTodo(it)
+                }
+            )
+        }
 
         binding.addButton.setOnClickListener {
             addTodo()
         }
+    }
+
+    private fun toggleTodo(todo: Todo) {
+        todo.isDone = !todo.isDone
+        binding.recyclerView.adapter?.notifyDataSetChanged()
     }
 
     // 할 일을 추가하는 메서드
@@ -60,7 +73,8 @@ data class Todo(
 
 class TodoAdapter(
     private val dataSet: List<Todo>,
-    val onClickDeleteIcon: (todo: Todo) -> Unit
+    val onClickDeleteIcon: (todo: Todo) -> Unit,
+    val onClickItem: (todo: Todo) -> Unit
 ) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
 
     class TodoViewHolder(val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -77,8 +91,30 @@ class TodoAdapter(
     override fun onBindViewHolder(viewHolder: TodoViewHolder, position: Int) {
         val todo = dataSet[position]
         viewHolder.binding.todoText.text = todo.text
+
+        // isDone 의 값이 true 와 false 때 조건
+        // true 같은 경우 paint 를 사용해서 사선을 그어준다
+        if (todo.isDone) {
+            viewHolder.binding.todoText.apply {
+                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                // 이텔릭채로 변경하는 코드
+                setTypeface(null, Typeface.ITALIC)
+            }
+        } else {
+            viewHolder.binding.todoText.apply {
+                // paintFlags 을 0 으로 주게 되면 기존 일반 글자로 선택
+                paintFlags = 0
+                // NORMAL 글씨로 변경하는 코드
+                setTypeface(null, Typeface.NORMAL)
+            }
+        }
+
         viewHolder.binding.deleteImageView.setOnClickListener {
             onClickDeleteIcon.invoke(todo)
+        }
+
+        viewHolder.binding.root.setOnClickListener {
+            onClickItem.invoke(todo)
         }
     }
 
