@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".TodoListReviewCode">
 
     <Button
-        android:id="@+id/add_button"
+        android:id="@+id/add_button_review"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -23,7 +23,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/edit_text"
+        android:id="@+id/edit_text_review"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -32,12 +32,12 @@
         android:ems="10"
         android:hint="할 일을 입력하세요"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@id/add_button"
+        app:layout_constraintEnd_toStartOf="@+id/add_button_review"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+        android:id="@+id/recycler_view_review"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -46,10 +46,8 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_button"
-        app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/item_todo" />
+        app:layout_constraintTop_toBottomOf="@+id/add_button_review"
+        tools:listitem="@layout/item_todo_review" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
