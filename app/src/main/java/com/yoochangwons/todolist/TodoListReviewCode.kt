@@ -9,3 +9,6 @@ class TodoListReviewCode : AppCompatActivity() {
         setContentView(R.layout.activity_todo_list_review_code)
     }
 }
+
+data class TodoListReview(val todo: String, val isDone: Boolean)
+
