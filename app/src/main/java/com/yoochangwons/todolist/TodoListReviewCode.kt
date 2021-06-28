@@ -1,20 +1,18 @@
 package com.yoochangwons.todolist
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.yoochangwons.todolist.databinding.ActivityTodoListReviewCodeBinding
-import com.yoochangwons.todolist.databinding.ItemTodoBinding
 import com.yoochangwons.todolist.databinding.ItemTodoReviewBinding
 
 class TodoListReviewCode : AppCompatActivity() {
 
     private lateinit var binding: ActivityTodoListReviewCodeBinding
+    val dataTodo = ArrayList<TodoListReview>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,16 +20,24 @@ class TodoListReviewCode : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val dataTodo = ArrayList<TodoListReview>()
         dataTodo.add(TodoListReview("숙제", false))
         dataTodo.add(TodoListReview("청소", false))
 
         binding.recyclerViewReview.adapter = TodoRecyclerViewReview(dataTodo)
         binding.recyclerViewReview.layoutManager = LinearLayoutManager(this)
+
+        binding.addButtonReview.setOnClickListener {
+            addTodoListReview()
+            binding.recyclerViewReview.adapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun addTodoListReview() {
+        dataTodo.add(TodoListReview(binding.editTextReview.text.toString()))
     }
 }
 
-data class TodoListReview(val todo: String, val isDone: Boolean)
+data class TodoListReview(val todo: String, val isDone: Boolean = false)
 
 class TodoRecyclerViewReview(
     val dataList: List<TodoListReview>
