@@ -1,5 +1,7 @@
 package com.yoochangwons.todolist
 
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,27 +22,44 @@ class TodoListReviewCode : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        dataTodo.add(TodoListReview("숙제", false))
-        dataTodo.add(TodoListReview("청소", false))
+        dataTodo.add(TodoListReview("숙제"))
+        dataTodo.add(TodoListReview("청소"))
 
-        binding.recyclerViewReview.adapter = TodoRecyclerViewReview(dataTodo)
-        binding.recyclerViewReview.layoutManager = LinearLayoutManager(this)
+        binding.recyclerViewReview.apply {
+            adapter = TodoRecyclerViewReview(dataTodo,
+                onClickDeleteIcon = {deleteImageButtonReview(it)},
+                onClickItem = {toggleTodoReview(it)}
+            )
+            layoutManager = LinearLayoutManager(this@TodoListReviewCode)
+        }
 
         binding.addButtonReview.setOnClickListener {
             addTodoListReview()
-            binding.recyclerViewReview.adapter?.notifyDataSetChanged()
         }
     }
 
     private fun addTodoListReview() {
         dataTodo.add(TodoListReview(binding.editTextReview.text.toString()))
+        binding.recyclerViewReview.adapter?.notifyDataSetChanged()
+    }
+
+    private fun toggleTodoReview(todo: TodoListReview) {
+        todo.isDone = !todo.isDone
+        binding.recyclerViewReview.adapter?.notifyDataSetChanged()
+    }
+
+    private fun deleteImageButtonReview(todo: TodoListReview) {
+        dataTodo.remove(todo)
+        binding.recyclerViewReview.adapter?.notifyDataSetChanged()
     }
 }
 
-data class TodoListReview(val todo: String, val isDone: Boolean = false)
+data class TodoListReview(val text: String, var isDone: Boolean = false)
 
 class TodoRecyclerViewReview(
-    val dataList: List<TodoListReview>
+    val dataList: List<TodoListReview>,
+    val onClickDeleteIcon: (todo: TodoListReview) -> Unit,
+    val onClickItem: (todo: TodoListReview) -> Unit
 ) : RecyclerView.Adapter<TodoRecyclerViewReview.ViewHolder>() {
 
     class ViewHolder(val binding: ItemTodoReviewBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -52,7 +71,28 @@ class TodoRecyclerViewReview(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.todoTextReview.text = dataList[position].todo
+        val todo = dataList[position]
+        holder.binding.todoTextReview.text = todo.text
+
+        if (dataList[position].isDone) {
+            holder.binding.todoTextReview.apply {
+                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                setTypeface(null, Typeface.ITALIC)
+            }
+        } else {
+            holder.binding.todoTextReview.apply {
+                paintFlags = 0
+                setTypeface(null, Typeface.NORMAL)
+            }
+        }
+
+        holder.binding.deleteImageViewReview.setOnClickListener {
+            onClickDeleteIcon.invoke(todo)
+        }
+
+        holder.binding.root.setOnClickListener {
+            onClickItem.invoke(todo)
+        }
     }
 
     override fun getItemCount(): Int {
