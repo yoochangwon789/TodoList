@@ -53,26 +53,6 @@ class MainActivity : AppCompatActivity() {
             (binding.recyclerView.adapter as TodoAdapter).setData(it)
         })
     }
-
-//    private fun toggleTodo(todo: Todo) {
-//        todo.isDone = !todo.isDone
-//        binding.recyclerView.adapter?.notifyDataSetChanged()
-//    }
-//
-//    // 할 일을 추가하는 메서드
-//    private fun addTodo() {
-//        val todo = Todo(binding.editText.text.toString())
-//        data.add(todo)
-//        // 데이터가 바뀌었을 때 RecyclerView adapter 에게 알려줘야 한다 notifyDataSetChanged 을 사용
-//        // non-null
-//        binding.recyclerView.adapter?.notifyDataSetChanged()
-//    }
-//
-//    // 할 일을 삭제하는 메서드
-//    private fun deleteTodo(todo: Todo) {
-//        data.remove(todo)
-//        binding.recyclerView.adapter?.notifyDataSetChanged()
-//    }
 }
 
 data class Todo(

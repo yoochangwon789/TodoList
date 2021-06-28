@@ -22,9 +22,6 @@ class TodoListReviewCode : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        dataTodo.add(TodoListReview("숙제"))
-        dataTodo.add(TodoListReview("청소"))
-
         binding.recyclerViewReview.apply {
             adapter = TodoRecyclerViewReview(dataTodo,
                 onClickDeleteIcon = {deleteImageButtonReview(it)},
