@@ -85,11 +85,11 @@ class TodoRecyclerViewReview(
         }
 
         holder.binding.deleteImageViewReview.setOnClickListener {
-            onClickDeleteIcon.invoke(todo)
+            onClickDeleteIcon(todo)
         }
 
         holder.binding.root.setOnClickListener {
-            onClickItem.invoke(todo)
+            onClickItem(todo)
         }
     }
 
