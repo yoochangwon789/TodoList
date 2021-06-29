@@ -2,14 +2,11 @@ package com.yoochangwons.todolist
 
 import android.graphics.Paint
 import android.graphics.Typeface
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.lifecycle.LiveData
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -32,8 +29,7 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = TodoAdapter(
-                emptyList()
-                ,
+                emptyList(),
                 onClickDeleteIcon = {
                     viewModel.deleteTodo(it)
                 },
@@ -117,7 +113,7 @@ class TodoAdapter(
     }
 }
 
-class MainViewModel: ViewModel() {
+class MainViewModel : ViewModel() {
     // 수정과 관찰이 가능한 MutableLiveData 객체
     // 읽기만 가능한 LiveData 객체
     val todoLiveData = MutableLiveData<List<Todo>>()
@@ -129,7 +125,7 @@ class MainViewModel: ViewModel() {
         todoLiveData.value = data
     }
 
-    fun addTodo(todo:Todo) {
+    fun addTodo(todo: Todo) {
         data.add(todo)
         // 변경이 될 때 마다 value 를 통해서 새로운 데이터를 주입시킨다
         todoLiveData.value = data
