@@ -6,6 +6,8 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -96,6 +98,12 @@ class MainActivity : AppCompatActivity() {
                 // 로그아웃 성공을 했을시 보여지는 코드
                 login()
             }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.main, menu)
+        return true
     }
 }
 
