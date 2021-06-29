@@ -35,14 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         // 로그인이 안 됨
         if (FirebaseAuth.getInstance().currentUser == null) {
-            val providers = arrayListOf(AuthUI.IdpConfig.EmailBuilder().build())
-
-            startActivityForResult(
-                AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(providers)
-                    .build(),
-                RC_SIGN_IN)
+            login()
         }
 
         binding.recyclerView.apply {
@@ -83,6 +76,26 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    fun login() {
+        val providers = arrayListOf(AuthUI.IdpConfig.EmailBuilder().build())
+
+        startActivityForResult(
+            AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build(),
+            RC_SIGN_IN)
+    }
+
+    fun logout() {
+        AuthUI.getInstance()
+            .signOut(this)
+            .addOnCompleteListener {
+                // 로그아웃 성공을 했을시 보여지는 코드
+                login()
+            }
     }
 }
 
