@@ -5,10 +5,7 @@ import android.content.Intent
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
@@ -104,6 +101,17 @@ class MainActivity : AppCompatActivity() {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.main, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.action_log_out -> {
+                logout()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
 
