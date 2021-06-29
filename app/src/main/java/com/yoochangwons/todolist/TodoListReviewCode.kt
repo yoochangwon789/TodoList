@@ -23,7 +23,8 @@ class TodoListReviewCode : AppCompatActivity() {
         setContentView(view)
 
         binding.recyclerViewReview.apply {
-            adapter = TodoRecyclerViewReview(dataTodo,
+            adapter = TodoRecyclerViewReview(
+                dataTodo,
                 onClickDeleteIcon = {deleteImageButtonReview(it)},
                 onClickItem = {toggleTodoReview(it)}
             )
