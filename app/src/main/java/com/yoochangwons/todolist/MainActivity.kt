@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    // ViewModel 의 라이프 사이클을 이용해 데이터 관찰을 통하여 화면 회전시 데이터가 사라지는 것을 방지
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -219,6 +220,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun addTodo(todo: Todo) {
+        // .? 현재의 사용자가 null 이 아니라면 let 함수를 실행
         FirebaseAuth.getInstance().currentUser?.let { user ->
             db.collection(user.uid).add(todo)
         }
