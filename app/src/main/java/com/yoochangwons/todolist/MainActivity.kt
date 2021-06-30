@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.yoochangwons.todolist.databinding.ActivityMainBinding
 import com.yoochangwons.todolist.databinding.ItemTodoBinding
 
@@ -85,7 +87,8 @@ class MainActivity : AppCompatActivity() {
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .build(),
-            RC_SIGN_IN)
+            RC_SIGN_IN
+        )
     }
 
     fun logout() {
@@ -180,9 +183,26 @@ class TodoAdapter(
 class MainViewModel : ViewModel() {
     // 수정과 관찰이 가능한 MutableLiveData 객체
     // 읽기만 가능한 LiveData 객체
+    val db = Firebase.firestore
+
     val todoLiveData = MutableLiveData<List<Todo>>()
 
     private val data = arrayListOf<Todo>()
+
+    init {
+        db.collection("todos")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val todo = Todo(
+                        document.data["text"] as String,
+                        document.data["isDone"] as Boolean
+                    )
+                    data.add(todo)
+                }
+                todoLiveData.value = data
+            }
+    }
 
     fun toggleTodo(todo: Todo) {
         todo.isDone = !todo.isDone
