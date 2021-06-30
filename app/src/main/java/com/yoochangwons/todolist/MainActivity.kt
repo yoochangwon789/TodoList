@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
-                val user = FirebaseAuth.getInstance().currentUser
+                viewModel.fetchData()
             } else {
                 // 로그인 실패
                 finish()
@@ -190,9 +191,14 @@ class MainViewModel : ViewModel() {
     private val data = arrayListOf<Todo>()
 
     init {
+        fetchData()
+    }
+
+    fun fetchData() {
         db.collection("todos")
             .get()
             .addOnSuccessListener { result ->
+                data.clear()
                 for (document in result) {
                     val todo = Todo(
                         document.data["text"] as String,
