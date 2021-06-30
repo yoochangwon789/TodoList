@@ -197,14 +197,19 @@ class MainViewModel : ViewModel() {
     fun fetchData() {
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
+            // 실시간으로 데이터가 변경되는 코드
             db.collection(user.uid)
-                .get()
-                .addOnSuccessListener { result ->
+                .addSnapshotListener { value, e ->
+                    if (e != null) {
+                        return@addSnapshotListener
+                    }
+
                     data.clear()
-                    for (document in result) {
+                    for (document in value!!) {
                         val todo = Todo(
-                            document.data["text"] as String,
-                            document.data["isDone"] as Boolean
+                            // ?: -> 이것은 앞의 있는 값이 널이라면 뒤에 있는 값을 사용한다
+                            document.getString("text") ?: "",
+                            document.getBoolean("isDone") ?: false
                         )
                         data.add(todo)
                     }
