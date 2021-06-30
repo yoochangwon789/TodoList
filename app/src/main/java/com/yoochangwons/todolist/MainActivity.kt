@@ -212,9 +212,10 @@ class MainViewModel : ViewModel() {
     }
 
     fun toggleTodo(todo: DocumentSnapshot) {
-        // 변경이 될 때 마다 value 를 통해서 새로운 데이터를 주입시킨다
-//        todo.isDone = !todo.isDone
-//        todoLiveData.value = data
+        FirebaseAuth.getInstance().currentUser?.let { user ->
+            val isDone = todo.getBoolean("isDone") ?: false
+            db.collection(user.uid).document(todo.id).update("isDone", !isDone)
+        }
     }
 
     fun addTodo(todo: Todo) {
