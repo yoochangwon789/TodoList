@@ -219,14 +219,15 @@ class MainViewModel : ViewModel() {
     }
 
     fun toggleTodo(todo: Todo) {
+        // 변경이 될 때 마다 value 를 통해서 새로운 데이터를 주입시킨다
         todo.isDone = !todo.isDone
         todoLiveData.value = data
     }
 
     fun addTodo(todo: Todo) {
-        data.add(todo)
-        // 변경이 될 때 마다 value 를 통해서 새로운 데이터를 주입시킨다
-        todoLiveData.value = data
+        FirebaseAuth.getInstance().currentUser?.let { user ->
+            db.collection(user.uid).add(todo)
+        }
     }
 
     fun deleteTodo(todo: Todo) {
