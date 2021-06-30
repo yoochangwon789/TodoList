@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.yoochangwons.todolist.databinding.ActivityMainBinding
@@ -125,9 +127,9 @@ data class Todo(
 )
 
 class TodoAdapter(
-    private var dataSet: List<Todo>,
-    val onClickDeleteIcon: (todo: Todo) -> Unit,
-    val onClickItem: (todo: Todo) -> Unit
+    private var dataSet: List<DocumentSnapshot>,
+    val onClickDeleteIcon: (todo: DocumentSnapshot) -> Unit,
+    val onClickItem: (todo: DocumentSnapshot) -> Unit
 ) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
 
     class TodoViewHolder(val binding: ItemTodoBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -143,11 +145,11 @@ class TodoAdapter(
 
     override fun onBindViewHolder(viewHolder: TodoViewHolder, position: Int) {
         val todo = dataSet[position]
-        viewHolder.binding.todoText.text = todo.text
+        viewHolder.binding.todoText.text = todo.getString("text") ?: ""
 
         // isDone 의 값이 true 와 false 때 조건
         // true 같은 경우 paint 를 사용해서 사선을 그어준다
-        if (todo.isDone) {
+        if ((todo.getBoolean("isDone") ?: false) == true) {
             viewHolder.binding.todoText.apply {
                 paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 // 이텔릭채로 변경하는 코드
@@ -174,7 +176,7 @@ class TodoAdapter(
     override fun getItemCount() = dataSet.size
 
     // 새로운 데이터를 갱신하는 함수
-    fun setData(newData: List<Todo>) {
+    fun setData(newData: List<DocumentSnapshot>) {
         dataSet = newData
         // 데이터가 바뀔 때 사용해줘야 하는 함수 notifyDataSetChanged()
         notifyDataSetChanged()
@@ -186,9 +188,7 @@ class MainViewModel : ViewModel() {
     // 읽기만 가능한 LiveData 객체
     val db = Firebase.firestore
 
-    val todoLiveData = MutableLiveData<List<Todo>>()
-
-    private val data = arrayListOf<Todo>()
+    val todoLiveData = MutableLiveData<List<DocumentSnapshot>>()
 
     init {
         fetchData()
@@ -204,24 +204,17 @@ class MainViewModel : ViewModel() {
                         return@addSnapshotListener
                     }
 
-                    data.clear()
-                    for (document in value!!) {
-                        val todo = Todo(
-                            // ?: -> 이것은 앞의 있는 값이 널이라면 뒤에 있는 값을 사용한다
-                            document.getString("text") ?: "",
-                            document.getBoolean("isDone") ?: false
-                        )
-                        data.add(todo)
+                    if (value != null) {
+                        todoLiveData.value = value.documents
                     }
-                    todoLiveData.value = data
                 }
         }
     }
 
-    fun toggleTodo(todo: Todo) {
+    fun toggleTodo(todo: DocumentSnapshot) {
         // 변경이 될 때 마다 value 를 통해서 새로운 데이터를 주입시킨다
-        todo.isDone = !todo.isDone
-        todoLiveData.value = data
+//        todo.isDone = !todo.isDone
+//        todoLiveData.value = data
     }
 
     fun addTodo(todo: Todo) {
@@ -230,8 +223,9 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun deleteTodo(todo: Todo) {
-        data.remove(todo)
-        todoLiveData.value = data
+    fun deleteTodo(todo: DocumentSnapshot) {
+        FirebaseAuth.getInstance().currentUser?.let { user ->
+            db.collection(user.uid).document(todo.id).delete()
+        }
     }
 }
