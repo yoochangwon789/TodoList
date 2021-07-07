@@ -5,7 +5,10 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.yoochangwons.todolist.databinding.ActivityTodoListReviewCodeBinding
@@ -14,7 +17,8 @@ import com.yoochangwons.todolist.databinding.ItemTodoReviewBinding
 class TodoListReviewCode : AppCompatActivity() {
 
     private lateinit var binding: ActivityTodoListReviewCodeBinding
-    val dataTodo = ArrayList<TodoListReview>()
+
+    private val model: ReviewViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,32 +28,23 @@ class TodoListReviewCode : AppCompatActivity() {
 
         binding.recyclerViewReview.apply {
             adapter = TodoRecyclerViewReview(
-                dataTodo,
-                onClickDeleteIcon = {deleteImageButtonReview(it)},
-                onClickItem = {toggleTodoReview(it)}
+                emptyList(),
+                onClickDeleteIcon = {
+                    model.deleteImageButtonReview(it)
+                },
+                onClickItem = {
+                    model.toggleTodoReview(it)
+                }
             )
             layoutManager = LinearLayoutManager(this@TodoListReviewCode)
         }
 
         binding.addButtonReview.setOnClickListener {
-            addTodoListReview()
+            model.addTodoListReview(TodoListReview(binding.editTextReview.text.toString()))
         }
     }
 
-    private fun addTodoListReview() {
-        dataTodo.add(TodoListReview(binding.editTextReview.text.toString()))
-        binding.recyclerViewReview.adapter?.notifyDataSetChanged()
-    }
 
-    private fun toggleTodoReview(todo: TodoListReview) {
-        todo.isDone = !todo.isDone
-        binding.recyclerViewReview.adapter?.notifyDataSetChanged()
-    }
-
-    private fun deleteImageButtonReview(todo: TodoListReview) {
-        dataTodo.remove(todo)
-        binding.recyclerViewReview.adapter?.notifyDataSetChanged()
-    }
 }
 
 data class TodoListReview(val text: String, var isDone: Boolean = false)
@@ -64,7 +59,8 @@ class TodoRecyclerViewReview(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_todo_review, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_todo_review, parent, false)
         return ViewHolder(ItemTodoReviewBinding.bind(view))
     }
 
@@ -96,5 +92,25 @@ class TodoRecyclerViewReview(
     override fun getItemCount(): Int {
         return dataList.size
     }
+}
 
+class ReviewViewModel : ViewModel() {
+    val liveDataReview = MutableLiveData<List<TodoListReview>>()
+
+    private val dataTodo = ArrayList<TodoListReview>()
+
+    fun addTodoListReview(todoListReview: TodoListReview) {
+        dataTodo.add(todoListReview)
+        liveDataReview.value = dataTodo
+    }
+
+    fun toggleTodoReview(todo: TodoListReview) {
+        todo.isDone = !todo.isDone
+        liveDataReview.value = dataTodo
+    }
+
+    fun deleteImageButtonReview(todo: TodoListReview) {
+        dataTodo.remove(todo)
+        liveDataReview.value = dataTodo
+    }
 }
