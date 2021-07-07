@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,15 +43,17 @@ class TodoListReviewCode : AppCompatActivity() {
         binding.addButtonReview.setOnClickListener {
             model.addTodoListReview(TodoListReview(binding.editTextReview.text.toString()))
         }
+
+        model.liveDataReview.observe(this, Observer {
+            (binding.recyclerViewReview.adapter as TodoRecyclerViewReview).setData(it)
+        })
     }
-
-
 }
 
 data class TodoListReview(val text: String, var isDone: Boolean = false)
 
 class TodoRecyclerViewReview(
-    val dataList: List<TodoListReview>,
+    var dataList: List<TodoListReview>,
     val onClickDeleteIcon: (todo: TodoListReview) -> Unit,
     val onClickItem: (todo: TodoListReview) -> Unit
 ) : RecyclerView.Adapter<TodoRecyclerViewReview.ViewHolder>() {
@@ -91,6 +94,11 @@ class TodoRecyclerViewReview(
 
     override fun getItemCount(): Int {
         return dataList.size
+    }
+
+    fun setData(newData: List<TodoListReview>) {
+        dataList = newData
+        notifyDataSetChanged()
     }
 }
 
