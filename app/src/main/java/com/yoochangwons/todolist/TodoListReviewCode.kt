@@ -107,8 +107,8 @@ class ReviewViewModel : ViewModel() {
 
     private val dataTodo = ArrayList<TodoListReview>()
 
-    fun addTodoListReview(todoListReview: TodoListReview) {
-        dataTodo.add(todoListReview)
+    fun addTodoListReview(todo: TodoListReview) {
+        dataTodo.add(todo)
         liveDataReview.value = dataTodo
     }
 
