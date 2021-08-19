@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun login() {
+    private fun login() {
         val providers = arrayListOf(AuthUI.IdpConfig.EmailBuilder().build())
 
         startActivityForResult(
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    fun logout() {
+    private fun logout() {
         AuthUI.getInstance()
             .signOut(this)
             .addOnCompleteListener {
