@@ -1,5 +1,6 @@
 package com.yoochangwonspro.app2.model.dao
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -11,7 +12,7 @@ import com.yoochangwonspro.app2.model.entity.Todo
 interface TodoListDao {
 
     @Query("SELECT * FROM todo")
-    fun getAll(): MutableLiveData<List<Todo>>
+    fun getAll(): LiveData<List<Todo>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(todo: Todo)
