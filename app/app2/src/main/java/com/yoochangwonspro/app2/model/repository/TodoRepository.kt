@@ -14,6 +14,10 @@ class TodoRepository(application: Application) {
     }
 
     fun insert(todo: Todo) {
-        todoList.insert(todo)
+        try {
+            Thread {
+                todoList.insert(todo)
+            }.start()
+        } catch (e: Exception) {}
     }
 }
