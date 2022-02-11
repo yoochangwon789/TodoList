@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "670869040888",
+    "project_id": "mini-todo-list-63498",
+    "storage_bucket": "mini-todo-list-63498.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:670869040888:android:4222779049f347637f150d",
+        "android_client_info": {
+          "package_name": "com.yoochangwonspro.myminiproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "670869040888-utpratl82b5lj72jkgrc1ksi96hel6bv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKDLoTvk8golJFCq7ILkEK4fl-egwx3x8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "670869040888-utpratl82b5lj72jkgrc1ksi96hel6bv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

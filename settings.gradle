@@ -1,2 +1,3 @@
 rootProject.name = "TodoList"
 include ':app'
+include ':app:app2'
